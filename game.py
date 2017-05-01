@@ -3,6 +3,7 @@
 import json
 import pygame
 import sys
+import xbox360_controller
 
 pygame.mixer.pre_init()
 pygame.init()
@@ -55,6 +56,10 @@ def play_music():
     if sound_on:
         pygame.mixer.music.play(-1)
 
+
+controller = xbox360_controller.Controller(0)
+
+
 # Images
 hero = "assets/player.png"
 hero_walk1 = load_image(hero)
@@ -73,7 +78,7 @@ block_images = {"TL": load_image("assets/png/Tiles/Tile (1).png"),
                 "TP": load_image("assets/png/Tiles/Tile (2).png"),
                 "CN": load_image("assets/png/Tiles/Tile (2).png"),
                 "LF": load_image("assets/png/Tiles/Tile (2).png"),
-                "SP": load_image("assets/tiles/special.png")}
+                "SP": load_image("assets/png/Tiles/Tile (2).png")}
 
 coin_img = load_image("assets/png/Tiles/Bones (3).png")
 heart_img = load_image("assets/potion.png")
@@ -655,6 +660,29 @@ class Game():
         surface.blit(lives_text, (32, 64))
 
     def process_events(self):
+
+        # joystick stuff
+        pressed = controller.get_buttons()
+
+        a_btn = pressed[xbox360_controller.A]
+        b_btn = pressed[xbox360_controller.B]
+        x_btn = pressed[xbox360_controller.X]
+        y_btn = pressed[xbox360_controller.Y]
+        back = pressed[xbox360_controller.BACK]
+        start = pressed[xbox360_controller.START]
+        # guide = pressed[xbox360_controller.GUIDE]
+        lt_bump = pressed[xbox360_controller.LEFT_BUMP]
+        rt_bump = pressed[xbox360_controller.RIGHT_BUMP]
+        lt_stick_btn = pressed[xbox360_controller.LEFT_STICK_BTN]
+        rt_stick_btn = pressed[xbox360_controller.RIGHT_STICK_BTN]
+
+        lt_x, lt_y = controller.get_left_stick()
+        rt_x, rt_y = controller.get_right_stick()
+
+        triggers = controller.get_triggers()
+
+        pad_up, pad_right, pad_down, pad_left = controller.get_pad()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.done = True
@@ -667,7 +695,7 @@ class Game():
                 elif self.stage == Game.PLAYING:
                     if event.key == JUMP:
                         self.hero.jump(self.level.blocks)
-
+                        
                 elif self.stage == Game.PAUSED:
                     pass
 
@@ -678,15 +706,33 @@ class Game():
                     if event.key == pygame.K_r:
                         self.reset()
 
+
+        if self.stage == Game.PLAYING:
+            if a_btn or pad_up:
+                self.hero.jump(self.level.blocks)
+
+
+        x, y = 65, 100
+
+        left_x = x + 50 + round(lt_x * 50)
+        left_y = y + 50 + round(lt_y * 50)
+
         pressed = pygame.key.get_pressed()
 
         if self.stage == Game.PLAYING:
-            if pressed[LEFT]:
+            if pressed[LEFT] or pad_left or left_x < 115:
                 self.hero.move_left()
-            elif pressed[RIGHT]:
+            elif pressed[RIGHT] or pad_right or left_x > 115:
                 self.hero.move_right()
+            elif start:
+                print('pause')
             else:
                 self.hero.stop()
+
+        if self.stage == Game.SPLASH:
+            if a_btn:
+                self.stage = Game.PLAYING
+                play_music()
 
     def update(self):
         if self.stage == Game.PLAYING:
