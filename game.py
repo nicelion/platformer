@@ -8,6 +8,7 @@ import xbox360_controller
 pygame.mixer.pre_init()
 pygame.init()
 
+
 # Window settings
 TITLE = "Name of Game"
 WIDTH = 960
@@ -61,12 +62,14 @@ controller = xbox360_controller.Controller(0)
 
 
 # Images
-hero = "assets/player.png"
-hero_walk1 = load_image(hero)
-hero_walk2 = load_image(hero)
-hero_jump = load_image(hero)
-hero_idle = load_image(hero)
-hero_images = {"run": [hero_walk1, hero_walk2],
+hero = "assets/player/Idle (1).png"
+hero_walk1 = load_image("assets/player/Run (2).png")
+hero_walk2 = load_image("assets/player/Run (3).png")
+hero_walk3 = load_image("assets/player/Run (6).png")
+hero_walk4 = load_image("assets/player/Run (7).png")
+hero_jump = load_image("assets/player/Jump (3).png")
+hero_idle = load_image("assets/player/Idle (1).png")
+hero_images = {"run": [hero_walk1, hero_walk2, hero_walk3, hero_walk4],
                "jump": hero_jump,
                "idle": hero_idle}
 
@@ -683,6 +686,8 @@ class Game():
 
         pad_up, pad_right, pad_down, pad_left = controller.get_pad()
 
+        buttons = [a_btn, b_btn, x_btn, y_btn, back, start, lt_bump, rt_bump, lt_stick_btn, rt_stick_btn]
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.done = True
@@ -730,7 +735,7 @@ class Game():
                 self.hero.stop()
 
         if self.stage == Game.SPLASH:
-            if a_btn:
+            if True in buttons:
                 self.stage = Game.PLAYING
                 play_music()
 

@@ -11,7 +11,7 @@
 	"scenery-position": "bottom",
 	"scenery-repeat-x": 1,
 	"scenery-fill-y": 1,
-	"music": "assets/sounds/theme_of_the wanderer.ogg",
+	"music": "assets/sounds/theme.ogg",
 	"start": [4, 8],
 	"gravity": 1.0,
 	"terminal-velocity": 32,
