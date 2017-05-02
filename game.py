@@ -142,7 +142,7 @@ class Character(Entity):
         self.image_index = 0
         self.steps = 0
 
-        self.speed = 5
+        self.speed = 0
         self.jump_power = 20
 
         self.vx = 0
@@ -662,6 +662,16 @@ class Game():
         surface.blit(hearts_text, (32, 32))
         surface.blit(lives_text, (32, 64))
 
+    def calculate_speed(self, x):
+        if x < 115:  # left
+            pass
+        elif x > 115:  # right
+            pass
+
+
+        if abs(x) > 115 and abs(x) > 120:
+            self.hero.speed = 5
+
     def process_events(self):
 
         # joystick stuff
@@ -727,6 +737,7 @@ class Game():
         if self.stage == Game.PLAYING:
             if pressed[LEFT] or pad_left or left_x < 115:
                 self.hero.move_left()
+                self.calculate_speed(left_x)
             elif pressed[RIGHT] or pad_right or left_x > 115:
                 self.hero.move_right()
             elif start:
