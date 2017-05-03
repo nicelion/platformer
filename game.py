@@ -142,7 +142,7 @@ class Character(Entity):
         self.image_index = 0
         self.steps = 0
 
-        self.speed = 0
+        self.speed = 10
         self.jump_power = 20
 
         self.vx = 0
@@ -164,8 +164,19 @@ class Character(Entity):
         self.vx = self.speed
         self.facing_right = True
 
+
+    def move(self, x):
+
+
+        self.vx = x * self.speed
+
+        if x < 0:
+          self.facing_right = False
+        else:
+          self.facing_right = True    
+
     def stop(self):
-        self.vx = 0
+        pass
 
     def jump(self, blocks):
         self.rect.y += 1
@@ -668,9 +679,16 @@ class Game():
         elif x > 115:  # right
             pass
 
+        #print(abs(x))
 
-        if abs(x) > 115 and abs(x) > 120:
+        speed = (1/15) * x
+
+        print(speed)
+        if x < 115:
             self.hero.speed = 5
+        else:
+            self.hero.speed = 5
+ 
 
     def process_events(self):
 
@@ -729,18 +747,24 @@ class Game():
 
         x, y = 65, 100
 
-        left_x = x + 50 + round(lt_x * 50)
-        left_y = y + 50 + round(lt_y * 50)
+        left_x = lt_x
+        left_y = lt_y
 
         pressed = pygame.key.get_pressed()
 
         if self.stage == Game.PLAYING:
-            if pressed[LEFT] or pad_left or left_x < 115:
-                self.hero.move_left()
+            '''if pressed[LEFT] or pad_left or left_x < 115:
+
                 self.calculate_speed(left_x)
+
+                self.hero.move_left()
             elif pressed[RIGHT] or pad_right or left_x > 115:
+                self.calculate_speed(left_x)
+
                 self.hero.move_right()
-            elif start:
+            '''
+            self.hero.move(left_x)
+            if start:
                 print('pause')
             else:
                 self.hero.stop()
