@@ -665,8 +665,8 @@ class Game():
         surface.blit(line2, (x2, y2))
 
     def display_stats(self, surface):
-        hearts_text = FONT_SM.render("Hearts: " + str(self.hero.hearts), 1, WHITE)
-        lives_text = FONT_SM.render("Lives: " + str(self.hero.lives), 1, WHITE)
+        hearts_text = FONT_SM.render("Skulls: " + str(self.hero.hearts), 1, WHITE)
+        lives_text = FONT_SM.render("Souls: " + str(self.hero.lives), 1, WHITE)
         score_text = FONT_SM.render("Score: " + str(self.hero.score), 1, WHITE)
 
         surface.blit(score_text, (WIDTH - score_text.get_width() - 32, 32))
@@ -773,6 +773,10 @@ class Game():
             if True in buttons:
                 self.stage = Game.PLAYING
                 play_music()
+
+        if self.stage == Game.LEVEL_COMPLETED:
+            if True in buttons:
+                self.advance()
 
     def update(self):
         if self.stage == Game.PLAYING:
