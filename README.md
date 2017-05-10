@@ -15,4 +15,5 @@ This is my platformer
 
 ### Hard
 - Change the game so that it uses the XBox controller instead of the keyboard
+- Kill enemies when you land on them. You'll need to check which direction you hit the enemy from in process enemies. Award different point values for different enemy types.
 ### Very Hard
