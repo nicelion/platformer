@@ -81,13 +81,15 @@ block_images = {"TL": load_image("assets/png/Tiles/Tile (1).png"),
                 "TP": load_image("assets/png/Tiles/Tile (2).png"),
                 "CN": load_image("assets/png/Tiles/Tile (2).png"),
                 "LF": load_image("assets/png/Tiles/Tile (2).png"),
-                "SP": load_image("assets/png/Tiles/Tile (2).png")}
+                "SP": load_image("assets/png/Tiles/Tile (2).png"),
+                "LD": load_image("assets/png/ladder.png")}
 
 coin_img = load_image("assets/png/Tiles/Bones (3).png")
 heart_img = load_image("assets/potion.png")
 oneup_img = load_image("assets/png/Objects/Crate.png")
 flag_img = load_image("assets/items/flag.png")
 flagpole_img = load_image("assets/items/flagpole.png")
+ladder_img = load_image("assets/png/ladder.png")
 
 monster_img1 = load_image("assets/enemies/Skeleton.png")
 monster_img2 = load_image("assets/enemies/Skeleton.png")
@@ -156,6 +158,9 @@ class Character(Entity):
         self.max_hearts = 3
         self.invincibility = 0
 
+        self.on_ladder = False
+
+
     def move_left(self):
         self.vx = -self.speed
         self.facing_right = False
@@ -164,11 +169,21 @@ class Character(Entity):
         self.vx = self.speed
         self.facing_right = True
 
+    def process_ladder(self, ladder):
+        hit_list = pygame.sprite.spritecollide(self, ladder, False)
 
-    def move(self, x):
+        if len(hit_list) > 0:
+            self.on_ladder = True
+        else:
+            self.on_ladder = False
+    
+    def move(self, x, y):
 
 
         self.vx = x * self.speed
+
+        if self.on_ladder:
+            self.vy = y * self.speed / 2
 
         if x < 0:
           self.facing_right = False
@@ -183,17 +198,23 @@ class Character(Entity):
 
         hit_list = pygame.sprite.spritecollide(self, blocks, False)
 
-        if len(hit_list) > 0:
-            self.vy = -1 * self.jump_power
-            play_sound(JUMP_SOUND)
+        if not self.on_ladder and self.rect.bottom > 9 * 64:
+            
+            if len(hit_list) > 0:
+                self.vy = -1 * self.jump_power
+                play_sound(JUMP_SOUND)
 
-        self.rect.y -= 1
+            self.rect.y -= 1
+        else:
+            pass
 
     def check_world_boundaries(self, level):
         if self.rect.left < 0:
             self.rect.left = 0
         elif self.rect.right > level.width:
             self.rect.right = level.width
+        elif self.rect.top > level.height:
+            self.die()
 
     def move_and_process_blocks(self, blocks):
         self.rect.x += self.vx
@@ -229,11 +250,22 @@ class Character(Entity):
 
     def process_enemies(self, enemies):
         hit_list = pygame.sprite.spritecollide(self, enemies, False)
+            
 
-        if len(hit_list) > 0 and self.invincibility == 0:
-            play_sound(HURT_SOUND)
-            self.hearts -= 1
-            self.invincibility = int(0.75 * FPS)
+        for p in hit_list:
+            if len(hit_list) > 0 and self.invincibility == 0 and self.vy <= 0:
+                play_sound(HURT_SOUND)
+                self.hearts -= 1
+                self.invincibility = int(0.75 * FPS)
+
+            elif len(hit_list) > 0 and self.invincibility == 0 and self.vy > 0:
+                pygame.sprite.Sprite.kill(p)
+                self.score += 10
+                
+
+                
+
+
 
     def process_powerups(self, powerups):
         hit_list = pygame.sprite.spritecollide(self, powerups, True)
@@ -284,9 +316,16 @@ class Character(Entity):
         self.hearts = self.max_hearts
         self.invincibility = 0
 
+
+    
+
     def update(self, level):
         self.process_enemies(level.enemies)
-        self.apply_gravity(level)
+
+        
+        if not self.on_ladder:
+            self.apply_gravity(level)
+            
         self.move_and_process_blocks(level.blocks)
         self.check_world_boundaries(level)
         self.set_image()
@@ -294,6 +333,7 @@ class Character(Entity):
         if self.hearts > 0:
             self.process_coins(level.coins)
             self.process_powerups(level.powerups)
+            self.process_ladder(level.ladder)
             self.check_flag(level)
 
             if self.invincibility > 0:
@@ -466,6 +506,10 @@ class Flag(Entity):
     def __init__(self, x, y, image):
         super().__init__(x, y, image)
 
+class Ladder(Entity):
+    def __init__(self, x, y, image):
+        super().__init__(x, y, image)
+
 class Level():
 
     def __init__(self, file_path):
@@ -474,12 +518,14 @@ class Level():
         self.starting_coins = []
         self.starting_powerups = []
         self.starting_flag = []
-
+        self.starting_ladder = []
+        
         self.blocks = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
         self.coins = pygame.sprite.Group()
         self.powerups = pygame.sprite.Group()
         self.flag = pygame.sprite.Group()
+        self.ladder = pygame.sprite.Group()
 
         self.active_sprites = pygame.sprite.Group()
         self.inactive_sprites = pygame.sprite.Group()
@@ -519,6 +565,10 @@ class Level():
         for item in map_data['hearts']:
             x, y = item[0] * GRID_SIZE, item[1] * GRID_SIZE
             self.starting_powerups.append(Heart(x, y, heart_img))
+
+        for item in map_data['ladders']:
+            x, y = item[0] * GRID_SIZE, item[1] * GRID_SIZE
+            self.starting_ladder.append(Ladder(x, y, ladder_img))
 
         for i, item in enumerate(map_data['flag']):
             x, y = item[0] * GRID_SIZE, item[1] * GRID_SIZE
@@ -588,9 +638,10 @@ class Level():
         self.coins.add(self.starting_coins)
         self.powerups.add(self.starting_powerups)
         self.flag.add(self.starting_flag)
+        self.ladder.add(self.starting_ladder)
 
         self.active_sprites.add(self.coins, self.enemies, self.powerups)
-        self.inactive_sprites.add(self.blocks, self.flag)
+        self.inactive_sprites.add(self.blocks, self.flag, self.ladder)
 
         self.inactive_sprites.draw(self.inactive_layer)
 
@@ -763,7 +814,7 @@ class Game():
 
                 self.hero.move_right()
             '''
-            self.hero.move(left_x)
+            self.hero.move(left_x, left_y)
             if start:
                 print('pause')
             else:
