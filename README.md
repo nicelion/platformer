@@ -13,6 +13,7 @@ This is my platformer
 
 ### Medium
 - Create your own custom artwork. http://www.piskelapp.com/ is a good site for this.
+- Put gaps in the blocks that run along the bottom of the level. Then make a player die when they fall through the bottom of the world. You'll need to make sure enemies that fall through are also removed from the game. Pygame's sprite.kill() function will be useful for this.
 
 
 ### Hard
