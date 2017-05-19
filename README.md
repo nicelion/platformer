@@ -1,7 +1,19 @@
 # platformer
-This is my platformer
 
 ![https://raw.githubusercontent.com/nicelion/platformer/master/resourses/GameArt.png](https://raw.githubusercontent.com/nicelion/platformer/master/resourses/GameArt.png)
+
+# About
+
+Have you ever wanted to save Halloween from those blasted ghosts and skeletons? If so, Skulls and Souls is the game for you. Play as a 
+Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and ghosts by jumping on them, use ladders to avoid them, and make it to the end of the workd to conquer the next. Make sure you don't fall of the edge though.
+
+# Awards, Accolades, and Testimonials
+
+- "Probably one of the best games I've ever played" - Donald J. Trump
+- 2017 Winner of the Nobel Peace Prize 
+- New York Times Best Selling Game
+- "It's okay" - Long John Silvers
+- "Worlds okayest game" - Captain Crunch
 
 ### Easy
 - Name your game.
