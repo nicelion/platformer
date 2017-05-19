@@ -1,6 +1,7 @@
 # platformer
 This is my platformer
 
+![https://raw.githubusercontent.com/nicelion/platformer/master/resourses/GameArt.png]
 
 ### Easy
 - Name your game.
