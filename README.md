@@ -15,6 +15,8 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 - "It's okay" - Long John Silvers
 - "Worlds okayest game" - Captain Crunch
 
+# Grading
+
 ### Easy
 - Name your game.
 - Find your own custom artwork for blocks.
