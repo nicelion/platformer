@@ -26,6 +26,8 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 - Customize the background layer for a level.
 - Find your own theme music
 
+- Change point value for coins. (NEW) 
+
 
 ### Medium
 - Design a complex standard level. Your level should be at least 60 blocks long.
@@ -33,7 +35,8 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 - Put gaps in the blocks that run along the bottom of the level. Then make a player die when they fall through the bottom of the world. You'll need to make sure enemies that fall through are also removed from the game. Pygame's sprite.kill() function will be useful for this.
 
 - Create cover art for your game. Save it as a PNG file. Print it in color and I'll post it in the room. (NEW)
-
+- Add a PAUSE stage to the game which is activated when the player presses 'p' (or a button on the joystick). All movement and time should stop during a pause stage. Pressing 'p' again should resume. Be sure to show a message indicating the game is paused. (NEW)
+- Display actual hearts to show health. Show empty hearts when health is not full. (NEW)
 
 ### Hard
 - Change the game so that it uses the XBox controller instead of the keyboard
