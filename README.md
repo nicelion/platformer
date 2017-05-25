@@ -27,7 +27,8 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 - Find your own theme music
 
 - Change point value for coins. (NEW) 
-
+- Update the display_stats function so that it shows the name of the current level. (NEW)
+- If you kill enemies (in the 'Hard' section), award different point values based on the type of enemy killed. (WIP)
 
 ### Medium
 - Design a complex standard level. Your level should be at least 60 blocks long.
@@ -37,12 +38,16 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 - Create cover art for your game. Save it as a PNG file. Print it in color and I'll post it in the room. (NEW)
 - Add a PAUSE stage to the game which is activated when the player presses 'p' (or a button on the joystick). All movement and time should stop during a pause stage. Pressing 'p' again should resume. Be sure to show a message indicating the game is paused. (NEW)
 - Display actual hearts to show health. Show empty hearts when health is not full. (NEW)
+- Create a game with at least 4 levels total. Levels should be significantly different in layout and each should be at least 60 block long. (WIP)
 
 ### Hard
 - Change the game so that it uses the XBox controller instead of the keyboard
 - Kill enemies when you land on them. You'll need to check which direction you hit the enemy from in process enemies. Award different point values for different enemy types.
 ### Very Hard
 - Add ladders to the game. If a player is on a ladder, don't apply gravity. Assign vy by player input instead. Also disable jumping while on a ladder. You should use animated climbing images too.
+
+
+115
 
 ## Grading
 
