@@ -30,6 +30,11 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 - Update the display_stats function so that it shows the name of the current level. (NEW)
 - If you kill enemies (in the 'Hard' section), award different point values based on the type of enemy killed. (WIP)
 
+- Add a victory sound that plays when the game is won. This should play instead of the normal end-of-level sound. (WIP)
+- Make power-ups give points to the player. (WIP)
+- Make a bad item which takes points away from the player. (WIP)
+- Add a prize other than a coin and give it a point value. (WIP)
+
 ### Medium
 - Design a complex standard level. Your level should be at least 60 blocks long.
 - Create your own custom artwork. http://www.piskelapp.com/ is a good site for this.
