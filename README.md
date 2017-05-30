@@ -48,6 +48,7 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 ### Hard
 - Change the game so that it uses the XBox controller instead of the keyboard
 - Kill enemies when you land on them. You'll need to check which direction you hit the enemy from in process enemies. Award different point values for different enemy types.
+- Give points for getting the flag at the end of the level. Do so in a way that landing higher on the flagpole earns more points. One way to do this could be to check the distance between the hero and the ground when the flag is reached and devise a formula to award points. Another way is to assign a value to flag pieces as they load and give points for the flag piece intersected. Notice that the flag pieces load from highest to lowest in the level class. (NEW)
 ### Very Hard
 - Add ladders to the game. If a player is on a ladder, don't apply gravity. Assign vy by player input instead. Also disable jumping while on a ladder. You should use animated climbing images too.
 
