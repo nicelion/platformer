@@ -1,6 +1,6 @@
 # platformer
 
-![https://raw.githubusercontent.com/nicelion/platformer/master/resourses/GameArt.png](https://raw.githubusercontent.com/nicelion/platformer/master/resourses/GameArt.png)
+![https://github.com/nicelion/platformer/blob/master/GameArt.png]([https://github.com/nicelion/platformer/blob/master/GameArt.png)
 
 # About
 
