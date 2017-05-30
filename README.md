@@ -32,8 +32,7 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 
 - Add a victory sound that plays when the game is won. This should play instead of the normal end-of-level sound. (NEW)
 - Make power-ups give points to the player. (NEW)
-- Make a bad item which takes points away from the player. (WIP)
-- Add a prize other than a coin and give it a point value. (WIP)
+- Use different theme music for each level you make. (NEW)
 
 ### Medium
 - Design a complex standard level. Your level should be at least 60 blocks long.
