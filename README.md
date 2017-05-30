@@ -15,6 +15,11 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 - "It's okay" - Long John Silvers
 - "Worlds okayest game" - Captain Crunch
 
+# How To Play
+
+Connect a Xbox 360 controller to your computer and run the game.py file. To play, use the A button to jump, and the joystick to move the player around. Use ladders to avoid obstacles and to get to other parts of the level. Watch out for ghosts and skeletons because they will kill you. Jump on them to destroy them. Capture the flag to get to the next level. The bones should be collected to gain coins and the hearts should be collected to gain more health. 
+
+
 # Grading
 
 ### Easy
