@@ -10,13 +10,14 @@ pygame.init()
 
 
 # Window settings
-TITLE = "Name of Game"
+TITLE = "Souls and Skulls"
 WIDTH = 960
 HEIGHT = 640
 FPS = 60
 GRID_SIZE = 64
 
 # Options
+global sound_on
 sound_on = True
 
 # Controls
@@ -27,7 +28,8 @@ JUMP = pygame.K_SPACE
 # Levels
 levels = ["levels/world-1.json",
           "levels/world-2.json",
-          "levels/world-3.json"]
+          "levels/world-3.json",
+          "levels/world-4.json"]
 
 # Colors
 TRANSPARENT = (0, 0, 0, 0)
@@ -62,7 +64,17 @@ controller = xbox360_controller.Controller(0)
 
 
 # Images
-hero = "assets/player/Idle (1).png"
+hero1 = "assets/player/Idle (1).png"
+hero2 = "assets/player/Idle (2).png"
+hero3 = "assets/player/Idle (3).png"
+hero4 = "assets/player/Idle (4).png"
+hero5 = "assets/player/Idle (5).png"
+hero6 = "assets/player/Idle (6).png"
+hero7 = "assets/player/Idle (7).png"
+hero8 = "assets/player/Idle (8).png"
+hero9 = "assets/player/Idle (9).png"
+hero10 = "assets/player/Idle (10).png"
+
 hero_walk1 = load_image("assets/player/Run (2).png")
 hero_walk2 = load_image("assets/player/Run (3).png")
 hero_walk3 = load_image("assets/player/Run (6).png")
@@ -98,14 +110,26 @@ monster_images = [monster_img1, monster_img2]
 bear_img = load_image("assets/enemies/ghost.png")
 bear_images = [bear_img]
 
+heart_img = load_image("assets/heart.png")
+lost_heart = load_image("assets/empty_heart.png")
+hearts = [heart_img, lost_heart]
+
 # Sounds
 JUMP_SOUND = pygame.mixer.Sound("assets/sounds/jump.wav")
 COIN_SOUND = pygame.mixer.Sound("assets/sounds/pickup_coin.wav")
 POWERUP_SOUND = pygame.mixer.Sound("assets/sounds/powerup.wav")
 HURT_SOUND = pygame.mixer.Sound("assets/sounds/hurt.ogg")
 DIE_SOUND = pygame.mixer.Sound("assets/sounds/death.wav")
-LEVELUP_SOUND = pygame.mixer.Sound("assets/sounds/level_up.wav")
+LEVELUP_SOUND = pygame.mixer.Sound("assets/sounds/level_up.ogg")
 GAMEOVER_SOUND = pygame.mixer.Sound("assets/sounds/game_over.wav")
+
+def draw_cloud(x, y):
+    pygame.draw.ellipse(screen, WHITE, [x, y + 20, 40 , 40])
+    pygame.draw.ellipse(screen, WHITE, [x + 60, y + 20, 40 , 40])
+    pygame.draw.ellipse(screen, WHITE, [x + 20, y + 10, 25, 25])
+    pygame.draw.ellipse(screen, WHITE, [x + 35, y, 50, 50])
+    pygame.draw.rect(screen, WHITE, [x + 20, y + 20, 60, 40])
+
 
 class Entity(pygame.sprite.Sprite):
 
@@ -171,11 +195,12 @@ class Character(Entity):
 
     def process_ladder(self, ladder):
         hit_list = pygame.sprite.spritecollide(self, ladder, False)
-
+        
         if len(hit_list) > 0:
             self.on_ladder = True
         else:
             self.on_ladder = False
+
     
     def move(self, x, y):
 
@@ -198,13 +223,13 @@ class Character(Entity):
 
         hit_list = pygame.sprite.spritecollide(self, blocks, False)
 
-        if not self.on_ladder and self.rect.bottom > 9 * 64:
+        if not self.on_ladder:
             
             if len(hit_list) > 0:
                 self.vy = -1 * self.jump_power
                 play_sound(JUMP_SOUND)
 
-            self.rect.y -= 1
+                self.rect.y -= 1
         else:
             pass
 
@@ -260,7 +285,12 @@ class Character(Entity):
 
             elif len(hit_list) > 0 and self.invincibility == 0 and self.vy > 0:
                 pygame.sprite.Sprite.kill(p)
-                self.score += 10
+
+                for enemy in hit_list:
+                    if enemy.kind == "ghost":
+                        self.score += 30
+                    elif enemy.kind == "skeleton":
+                            self.score += 10
                 
 
                 
@@ -273,6 +303,7 @@ class Character(Entity):
         for p in hit_list:
             play_sound(POWERUP_SOUND)
             p.apply(self)
+            self.score += 25
 
     def check_flag(self, level):
         hit_list = pygame.sprite.spritecollide(self, level.flag, False)
@@ -280,6 +311,7 @@ class Character(Entity):
         if len(hit_list) > 0:
             level.completed = True
             play_sound(LEVELUP_SOUND)
+            self.score += 640 - self.rect.y
 
     def set_image(self):
         if self.on_ground:
@@ -297,6 +329,8 @@ class Character(Entity):
             else:
                 self.image = self.image_idle
         else:
+            if self.vx == 0:
+                pass
             if self.facing_right:
                 self.image = self.image_jump_right
             else:
@@ -415,6 +449,8 @@ class Bear(Enemy):
         self.vx = self.start_vx
         self.vy = self.start_vy
 
+        self.kind = "ghost"
+
     def move_and_process_blocks(self, blocks):
         self.rect.x += self.vx
         hit_list = pygame.sprite.spritecollide(self, blocks, False)
@@ -449,6 +485,8 @@ class Monster(Enemy):
 
         self.vx = self.start_vx
         self.vy = self.start_vy
+
+        self.kind = "skeleton"
 
     def move_and_process_blocks(self, blocks):
         reverse = False
@@ -530,10 +568,14 @@ class Level():
         self.active_sprites = pygame.sprite.Group()
         self.inactive_sprites = pygame.sprite.Group()
 
+        
+
         with open(file_path, 'r') as f:
             data = f.read()
 
         map_data = json.loads(data)
+
+        self.name = map_data["name"]
 
         self.width = map_data['width'] * GRID_SIZE
         self.height = map_data['height'] * GRID_SIZE
@@ -716,13 +758,23 @@ class Game():
         surface.blit(line2, (x2, y2))
 
     def display_stats(self, surface):
-        hearts_text = FONT_SM.render("Skulls: " + str(self.hero.hearts), 1, WHITE)
-        lives_text = FONT_SM.render("Souls: " + str(self.hero.lives), 1, WHITE)
-        score_text = FONT_SM.render("Score: " + str(self.hero.score), 1, WHITE)
+        hearts_text = FONT_SM.render(self.level.name, 1, WHITE)  # hearts
+        lives_text = FONT_SM.render("Souls: " + str(self.hero.lives), 1, WHITE)     # lives
+        score_text = FONT_SM.render("Score: " + str(self.hero.score), 1, WHITE)     # Score
 
         surface.blit(score_text, (WIDTH - score_text.get_width() - 32, 32))
-        surface.blit(hearts_text, (32, 32))
-        surface.blit(lives_text, (32, 64))
+        surface.blit(hearts_text, (32, 64+32))
+        surface.blit(lives_text, (32, 128))
+
+        y = 30
+
+        for x in range(self.hero.max_hearts):
+            if x < self.hero.hearts:
+                surface.blit(hearts[0], [x *25, y])
+            else:
+                surface.blit(hearts[1], [x * 25, y])
+
+        
 
     def calculate_speed(self, x):
         if x < 115:  # left
@@ -768,10 +820,21 @@ class Game():
         buttons = [a_btn, b_btn, x_btn, y_btn, back, start, lt_bump, rt_bump, lt_stick_btn, rt_stick_btn]
 
         for event in pygame.event.get():
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == xbox360_controller.START:
+                    if self.stage == Game.PLAYING:
+                        self.stage = Game.PAUSED
+                    elif self.stage == Game.PAUSED:
+                        self.stage = Game.PLAYING
+
+
+                        
             if event.type == pygame.QUIT:
                 self.done = True
 
             elif event.type == pygame.KEYDOWN:
+
+                
                 if self.stage == Game.SPLASH or self.stage == Game.START:
                     self.stage = Game.PLAYING
                     play_music()
@@ -779,9 +842,12 @@ class Game():
                 elif self.stage == Game.PLAYING:
                     if event.key == JUMP:
                         self.hero.jump(self.level.blocks)
-                        
+                    if event.key == pygame.K_p:
+                        self.stage = Game.PAUSED
+                    
                 elif self.stage == Game.PAUSED:
-                    pass
+                    if event.key == pygame.K_p:
+                        self.stage = Game.PLAYING
 
                 elif self.stage == Game.LEVEL_COMPLETED:
                     self.advance()
@@ -796,38 +862,32 @@ class Game():
                 self.hero.jump(self.level.blocks)
 
 
-        x, y = 65, 100
 
         left_x = lt_x
         left_y = lt_y
 
         pressed = pygame.key.get_pressed()
 
+
+
+
         if self.stage == Game.PLAYING:
-            '''if pressed[LEFT] or pad_left or left_x < 115:
-
-                self.calculate_speed(left_x)
-
-                self.hero.move_left()
-            elif pressed[RIGHT] or pad_right or left_x > 115:
-                self.calculate_speed(left_x)
-
-                self.hero.move_right()
-            '''
             self.hero.move(left_x, left_y)
-            if start:
-                print('pause')
-            else:
-                self.hero.stop()
 
-        if self.stage == Game.SPLASH:
+
+        elif self.stage == Game.SPLASH:
             if True in buttons:
                 self.stage = Game.PLAYING
                 play_music()
 
-        if self.stage == Game.LEVEL_COMPLETED:
+        elif self.stage == Game.LEVEL_COMPLETED:
             if True in buttons:
                 self.advance()
+
+        
+        elif self.stage == Game.GAME_OVER:
+            if True in buttons:
+                self.reset()
 
     def update(self):
         if self.stage == Game.PLAYING:
@@ -878,15 +938,15 @@ class Game():
         if self.stage == Game.SPLASH:
             self.display_splash(self.window)
         elif self.stage == Game.START:
-            self.display_message(self.window, "Ready?!!!", "Press any key to start.")
+            self.display_message(self.window, "Ready?!!!", "Press any button to start.")
         elif self.stage == Game.PAUSED:
-            pass
+            pygame.draw.rect(self.level.active_layer, (0,0,0), [0,640, 980, 20])
         elif self.stage == Game.LEVEL_COMPLETED:
-            self.display_message(self.window, "Level Complete", "Press any key to continue.")
+            self.display_message(self.window, "Level Complete", "Press any button to continue.")
         elif self.stage == Game.VICTORY:
-            self.display_message(self.window, "You Win!", "Press 'R' to restart.")
+            self.display_message(self.window, "You Win!", "Press any button to restart.")
         elif self.stage == Game.GAME_OVER:
-            self.display_message(self.window, "Game Over", "Press 'R' to restart.")
+            self.display_message(self.window, "Game Over", "Press any button to restart.")
 
         pygame.display.flip()
 
