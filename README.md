@@ -28,10 +28,10 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 
 - Change point value for coins. (NEW) 
 - Update the display_stats function so that it shows the name of the current level. (NEW)
-- If you kill enemies (in the 'Hard' section), award different point values based on the type of enemy killed. (WIP)
+- If you kill enemies (in the 'Hard' section), award different point values based on the type of enemy killed. (NEW)
 
-- Add a victory sound that plays when the game is won. This should play instead of the normal end-of-level sound. (WIP)
-- Make power-ups give points to the player. (WIP)
+- Add a victory sound that plays when the game is won. This should play instead of the normal end-of-level sound. (NEW)
+- Make power-ups give points to the player. (NEW)
 - Make a bad item which takes points away from the player. (WIP)
 - Add a prize other than a coin and give it a point value. (WIP)
 
@@ -43,7 +43,7 @@ Jack'o'lantern and collect bones throughout this scary world. Kill skeltors and 
 - Create cover art for your game. Save it as a PNG file. Print it in color and I'll post it in the room. (NEW)
 - Add a PAUSE stage to the game which is activated when the player presses 'p' (or a button on the joystick). All movement and time should stop during a pause stage. Pressing 'p' again should resume. Be sure to show a message indicating the game is paused. (NEW)
 - Display actual hearts to show health. Show empty hearts when health is not full. (NEW)
-- Create a game with at least 4 levels total. Levels should be significantly different in layout and each should be at least 60 block long. (WIP)
+- Create a game with at least 4 levels total. Levels should be significantly different in layout and each should be at least 60 block long. (NEW)
 
 ### Hard
 - Change the game so that it uses the XBox controller instead of the keyboard
