@@ -1,5 +1,5 @@
 # platformer
-
+[Download](https://github.com/nicelion/platformer.git)
 ![https://github.com/nicelion/platformer/blob/master/GameArt.png](https://github.com/nicelion/platformer/blob/master/GameArt.png)
 
 # About
